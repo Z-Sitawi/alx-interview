@@ -1,53 +1,55 @@
 #!/usr/bin/python3
 
 import sys
-import re
 
 
-def print_message(dict_sc, total_file_size):
+def print_message(statusCodeDict, ttfs):
     """
-    Function to print statistics
+    Method to print
     Args:
-        dict_sc: Dictionary of status codes and their counts
-        total_file_size: Total accumulated file size
+        statusCodeDict: dict of status codes
+        ttfs: total of the file
+    Returns:
+        Nothing
     """
-    print(f'Total file size: {total_file_size}')
-    for code in sorted(dict_sc.keys()):
-        if dict_sc[code] > 0:
-            print(f'{code}: {dict_sc[code]}')
+
+    print("File size: {}".format(ttfs))
+    for key, val in sorted(statusCodeDict.items()):
+        if val != 0:
+            print("{}: {}".format(key, val))
 
 
-total_file_size = 0
-dict_sc = {"200": 0,
-           "301": 0,
-           "400": 0,
-           "401": 0,
-           "403": 0,
-           "404": 0,
-           "405": 0,
-           "500": 0}
-
-line_count = 0
+ttfs = 0
+code = 0
+counter = 0
+statusCodeDict = {"200": 0,
+                  "301": 0,
+                  "400": 0,
+                  "401": 0,
+                  "403": 0,
+                  "404": 0,
+                  "405": 0,
+                  "500": 0
+                  }
 
 try:
     for line in sys.stdin:
-        line = line.strip()
-        match = re.match(r'^\S+ \S+ \S+ \[(.*?)] "GET /projects/260 HTTP/1\.1" (\d+) (\d+)$', line)
-        if match:
-            status_code = match.group(2)
-            file_size = int(match.group(3))
+        parsed_line = line.split()  # ✄ trimming
+        parsed_line = parsed_line[::-1]  # inverting
 
-            total_file_size += file_size
+        if len(parsed_line) > 2:
+            counter += 1
 
-            if status_code in dict_sc:
-                dict_sc[status_code] += 1
+            if counter <= 10:
+                ttfs += int(parsed_line[0])  # file size
+                code = parsed_line[1]  # status code
 
-            line_count += 1
+                if code in statusCodeDict.keys():
+                    statusCodeDict[code] += 1
 
-            if line_count % 10 == 0:
-                print_message(dict_sc, total_file_size)
-                print()  # Print an empty line for separation
+            if counter == 10:
+                print_message(statusCodeDict, ttfs)
+                counter = 0
 
-except KeyboardInterrupt:
-    # If interrupted, print the final accumulated statistics
-    print_message(dict_sc, total_file_size)
+finally:
+    print_message(statusCodeDict, ttfs)
