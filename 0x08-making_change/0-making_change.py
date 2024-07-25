@@ -10,8 +10,11 @@ def makeChange(coins, total):
     :param total: (int) A given amount
     :return: the fewest number of coins needed to meet a given amount total
     """
-    if total <= 0 or coins == []:
+    if total <= 0:
         return 0
+    elif not coins:
+        return -1
+
     if isinstance(coins, list):
         coins = sorted(coins)
         count = 0
