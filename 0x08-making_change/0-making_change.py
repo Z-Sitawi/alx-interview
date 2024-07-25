@@ -24,6 +24,7 @@ def makeChange(coins, total):
                     if coins[i] > total and coins[i] != coins[0]:
                         total -= coins[i-1]
                         count += 1
+                        break
 
         if total < 0:
             return -1
