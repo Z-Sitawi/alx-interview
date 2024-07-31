@@ -17,22 +17,32 @@ def island_perimeter(grid):
 
     :return: The perimeter of the island described in grid
     """
-    if not grid:
-        return 0
+    perimeter = 0
+    if len(grid) == 0:
+        return perimeter
 
-    width = 0
-    height = 0
-    for row in grid:
-        if 1 in row:
-            height += 1
-        count = 0
-        for x in row:
-            if x == 1:
-                count += 1
-        if count > width:
-            width = count
+    for row in range(len(grid)):
+        for cell in range(len(grid[row])):
+            if grid[row][cell] == 1:
 
-    if (height > 100 or width > 100) or (height == 0 or width == 0):
-        return 0
-    else:
-        return (height + width) * 2
+                """ Check up"""
+                row_idx = row - 1
+                if row_idx < 0 or grid[row_idx][cell] == 0:
+                    perimeter += 1
+
+                """ Check down"""
+                row_idx = row + 1
+                if row_idx >= len(grid) or grid[row_idx][cell] == 0:
+                    perimeter += 1
+
+                """ Check left"""
+                cell_idx = cell - 1
+                if cell_idx < 0 or grid[row][cell_idx] == 0:
+                    perimeter += 1
+
+                """ Check right"""
+                cell_idx = cell + 1
+                if cell_idx >= len(grid[row]) or grid[row][cell_idx] == 0:
+                    perimeter += 1
+    return perimeter
+
