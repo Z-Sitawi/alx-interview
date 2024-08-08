@@ -28,7 +28,7 @@ def isWinner(x, nums):
     """
     maria = 0
     ben = 0
-    turn = 'M'
+    turn = 'Maria'
 
     if len(nums) == 0 or nums is None or x <= 0 or x != len(nums):
         return None
@@ -50,7 +50,7 @@ def isWinner(x, nums):
             if not prime_found:
                 break
 
-        if turn == 'M':
+        if turn == 'Maria':
             # No moves left for Maria
             ben += 1
         else:
