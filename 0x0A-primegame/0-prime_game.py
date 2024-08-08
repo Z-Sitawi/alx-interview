@@ -31,60 +31,39 @@ def isWinner(x, nums):
     :return: The Name of the player that won the most rounds,
         or None if the winner cannot be determined.
     """
-    winner = None
     maria = 0
     ben = 0
-    maria_turn = True
-    ben_turn = False
+    turn = 'M'
+    x = min(x, len(nums))
 
-    if len(nums) < 1:
-        return winner
-
-    if x > len(nums):
-        x = len(nums)
+    if len(nums) < 1 or not nums:
+        return None
 
     for nbr_round in range(x):
         n = nums[nbr_round]
         collection = [nbr for nbr in range(1, n+1)]
         idx = 1
 
-        while len(collection) != 1:
+        while len(collection) > 1:
             if idx >= len(collection):
                 break
 
-            if maria_turn:
-                # Maria's turn
-                if is_prime(collection[idx]):
-                    num = collection[idx]
-                    collection.remove(num)
-                    for mult in find_multiples(num, collection):
-                        collection.remove(mult)
-                    maria_turn = False
-                    ben_turn = True
-                else:
-                    idx += 1
-            elif ben_turn:
-                # Ben's Turn
-                if is_prime(collection[idx]):
-                    num = collection[idx]
-                    collection.remove(num)
-                    for mult in find_multiples(num, collection):
-                        collection.remove(mult)
-                    ben_turn = False
-                    maria_turn = True
-                else:
-                    idx += 1
+            if is_prime(collection[idx]):
+                num = collection[idx]
+                collection.remove(num)
+                for mult in find_multiples(num, collection):
+                    collection.remove(mult)
+                turn = 'B' if turn == 'M' else 'B'
+            else:
+                idx += 1
 
-        if maria_turn:
+        if turn == 'M':
             # No moves left for Maria
             ben += 1
         else:
             # No moves left for Ben
             maria += 1
 
-    if ben > maria:
-        winner = 'Ben'
-    elif ben < maria:
-        winner = 'Maria'
+    winner = 'Ben' if ben > maria else 'Maria' if ben < maria else None
 
     return winner
