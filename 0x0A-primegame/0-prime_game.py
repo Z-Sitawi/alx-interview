@@ -18,45 +18,49 @@ def is_prime(num):
     return True
 
 
+def remove_multiples(arr, prime):
+    """Mark multiples of the given prime as non-prime in the array."""
+    for i in range(prime * 2, len(arr), prime):
+        arr[i] = 0
+
+
 def isWinner(x, nums):
     """
-        players are: Maria & Ben
+    Determine which player won the most rounds.
     :param x: (int) the number of rounds.
     :param nums: (list) of (int) An array of n
-    :return: The Name of the player that won the most rounds,
-        or None if the winner cannot be determined.
+    :return: The name of the player that won the most rounds,
+             or None if the winner cannot be determined.
     """
-    maria = 0
-    ben = 0
-    turn = 'Maria'
+    maria_wins = 0
+    ben_wins = 0
 
-    if len(nums) == 0 or nums is None or x <= 0 or x != len(nums):
+    if x <= 0 or not nums:
         return None
 
-    for nbr_round in range(x):
-        n = nums[nbr_round]
-        collection = [nbr for nbr in range(1, n+1)]
+    # Limit the number of rounds to the number of available games
+    x = min(x, len(nums))
 
-        while len(collection) > 1:
-            prime_found = False
-            # Check each number in the collection to find a prime
-            for idx in range(len(collection)):
-                if is_prime(collection[idx]):
-                    prime = collection[idx]
-                    collection = [r for r in collection if r % prime != 0]
-                    prime_found = True
-                    turn = 'Ben' if turn == 'Maria' else 'Maria'
-                    break
-            if not prime_found:
-                break
+    # Create a boolean list to mark primes
+    max_n = max(nums)
+    is_prime_list = [1] * (max_n + 1)  # 1 means active
+    is_prime_list[0], is_prime_list[1] = 0, 0  # 0 and 1 are not primes
 
-        if turn == 'Maria':
-            # No moves left for Maria
-            ben += 1
+    # Mark non-prime numbers using the sieve method
+    for i in range(2, len(is_prime_list)):
+        if is_prime_list[i] == 1:  # i is a prime number
+            remove_multiples(is_prime_list, i)
+
+    for n in nums:
+        # Determine if the count of active numbers up to n is even or odd
+        if sum(is_prime_list[:n + 1]) % 2 == 0:
+            ben_wins += 1
         else:
-            # No moves left for Ben
-            maria += 1
+            maria_wins += 1
 
-    winner = 'Ben' if ben > maria else 'Maria' if ben < maria else None
-
-    return winner
+    if maria_wins > ben_wins:
+        return "Maria"
+    elif ben_wins > maria_wins:
+        return "Ben"
+    else:
+        return None
