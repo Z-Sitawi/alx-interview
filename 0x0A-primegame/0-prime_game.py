@@ -18,11 +18,6 @@ def is_prime(num):
     return True
 
 
-def find_multiples(prime, array):
-    """ Finds all multiples of the given prime number from the array."""
-    return [x for x in array if x % prime == 0]
-
-
 def isWinner(x, nums):
     """
         players are: Maria & Ben
@@ -42,20 +37,19 @@ def isWinner(x, nums):
     for nbr_round in range(x):
         n = nums[nbr_round]
         collection = [nbr for nbr in range(1, n+1)]
-        idx = 1
 
         while len(collection) > 1:
-            if idx >= len(collection):
+            prime_found = False
+            # Check each number in the collection to find a prime
+            for idx in range(len(collection)):
+                if is_prime(collection[idx]):
+                    prime = collection[idx]
+                    collection = [num for num in collection if num % prime != 0]
+                    prime_found = True
+                    turn = 'Ben' if turn == 'Maria' else 'Maria'
+                    break
+            if not prime_found:
                 break
-
-            if is_prime(collection[idx]):
-                num = collection[idx]
-                collection.remove(num)
-                for mult in find_multiples(num, collection):
-                    collection.remove(mult)
-                turn = 'B' if turn == 'M' else 'B'
-            else:
-                idx += 1
 
         if turn == 'M':
             # No moves left for Maria
