@@ -31,7 +31,7 @@ def isWinner(x, nums):
     turn = 'M'
     x = min(x, len(nums))
 
-    if len(nums) < 1 or not nums:
+    if len(nums) < 1 or not nums or x <= 0:
         return None
 
     for nbr_round in range(x):
@@ -44,7 +44,7 @@ def isWinner(x, nums):
             for idx in range(len(collection)):
                 if is_prime(collection[idx]):
                     prime = collection[idx]
-                    collection = [num for num in collection if num % prime != 0]
+                    collection = [r for r in collection if r % prime != 0]
                     prime_found = True
                     turn = 'Ben' if turn == 'Maria' else 'Maria'
                     break
