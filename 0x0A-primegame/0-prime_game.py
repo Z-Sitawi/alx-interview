@@ -61,7 +61,6 @@ def isWinner(x, nums):
                         collection.remove(mult)
                     maria_turn = False
                     ben_turn = True
-                    maria += 1
                 else:
                     idx += 1
             elif ben_turn:
@@ -73,15 +72,19 @@ def isWinner(x, nums):
                         collection.remove(mult)
                     ben_turn = False
                     maria_turn = True
-                    ben += 1
                 else:
                     idx += 1
 
         if maria_turn:
             # No moves left for Maria
-            winner = 'Ben'
+            ben += 1
         else:
             # No moves left for Ben
-            winner = 'Maria'
+            maria += 1
+
+    if ben > maria:
+        winner = 'Ben'
+    elif ben < maria:
+        winner = 'Maria'
 
     return winner
