@@ -29,9 +29,8 @@ def isWinner(x, nums):
     maria = 0
     ben = 0
     turn = 'M'
-    x = min(x, len(nums))
 
-    if len(nums) < 1 or not nums or x <= 0:
+    if len(nums) == 0 or nums is None or x <= 0 or x != len(nums):
         return None
 
     for nbr_round in range(x):
